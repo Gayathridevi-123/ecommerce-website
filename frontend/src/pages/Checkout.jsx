@@ -30,7 +30,7 @@ function Checkout() {
     console.log("CART ITEMS 👉", cart); // ✅ products print
 
     try {
-      const res = await fetch("${import.meta.env.REACT_APP_API_URL}/api/orders", {
+      const res = await fetch("${import.meta.env.VITE_API_URL}/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
