@@ -10,7 +10,7 @@ function Register() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("${import.meta.env.REACT_APP_API_URL}/api/auth/register", {
+    const res = await fetch("http://localhost:5000/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
