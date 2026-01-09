@@ -8,34 +8,35 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // 🔴 IMPORTANT
+    e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await res.json();
-      console.log("LOGIN RESPONSE 👉", data); // 🔴 DEBUG
+      console.log("LOGIN RESPONSE 👉", data);
 
       if (!res.ok) {
         alert(data.message || "Login failed");
         return;
       }
 
-      // ✅ Save token & user info
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
-      // 🔑 Trigger Navbar update in same tab
       window.dispatchEvent(new Event("storage"));
 
       alert("Login successful");
-      navigate("/"); // go to home
+      navigate("/");
     } catch (error) {
       console.error(error);
       alert("Server error");
@@ -67,7 +68,7 @@ function Login() {
 
         <button
           type="submit"
-          className="bg-amber-500 text-gray-900 w-full py-2 mt-3 rounded hover:bg-amber-600 transition-colors"
+          className="bg-amber-500 text-gray-900 w-full py-2 mt-3 rounded hover:bg-amber-600"
         >
           Login
         </button>

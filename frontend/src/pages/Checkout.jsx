@@ -10,6 +10,7 @@ function Checkout() {
 
   const handlePlaceOrder = async () => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       alert("Please login first");
       navigate("/login");
@@ -27,34 +28,37 @@ function Checkout() {
       return;
     }
 
-    console.log("CART ITEMS 👉", cart); // ✅ products print
+    console.log("CART ITEMS 👉", cart);
 
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          address,
-          city,
-          pincode,
-          products: cart,
-          paymentStatus: "PAID", // 🟢 fake payment
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/orders`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            address,
+            city,
+            pincode,
+            products: cart,
+            paymentStatus: "PAID",
+          }),
+        }
+      );
 
       const data = await res.json();
       console.log("ORDER RESPONSE 👉", data);
 
       if (!res.ok) {
-        alert("Order failed");
+        alert(data.message || "Order failed");
         return;
       }
 
       navigate("/success", {
-        state: { orderId: data._id }, // 🟢 order id send
+        state: { orderId: data._id },
       });
     } catch (err) {
       console.error(err);
@@ -65,9 +69,7 @@ function Checkout() {
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-4">
       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-4">
-          Checkout
-        </h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Checkout</h2>
 
         <input
           type="text"
@@ -93,7 +95,6 @@ function Checkout() {
           onChange={(e) => setPincode(e.target.value)}
         />
 
-        {/* Fake payment look */}
         <div className="border rounded p-3 mb-4 bg-green-50 text-green-700 text-sm">
           💳 Payment Mode: UPI (GPay) <br />
           Status: Ready to Pay
